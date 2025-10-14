@@ -3,7 +3,7 @@ import { useState } from "react";
 
 const API_URL = "http://127.0.0.1:8765/create-address";
 
-export default function CreateAddressButton() {
+export default function CreateAddressButton({ onCreated }) {
   const [address, setAddress] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -15,6 +15,9 @@ export default function CreateAddressButton() {
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
       setAddress(data.address);
+      if (onCreated) {
+        onCreated(data.address);
+      }
     } catch (err) {
       console.error(err);
       alert("주소 생성 실패");
