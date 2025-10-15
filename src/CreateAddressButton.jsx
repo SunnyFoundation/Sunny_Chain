@@ -5,16 +5,19 @@ const API_URL = "http://127.0.0.1:8765/create-address";
 
 export default function CreateAddressButton({ onCreated }) {
   const [address, setAddress] = useState("");
+  const [wif, setWif] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleCreate = async () => {
     setLoading(true);
     setAddress("");
+    setWif("");
     try {
       const res = await fetch(API_URL, { method: "POST" });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
       setAddress(data.address);
+       setWif(data.wif || data.private_key || "");
       if (onCreated) {
         onCreated(data.address);
       }
@@ -34,6 +37,11 @@ export default function CreateAddressButton({ onCreated }) {
       {address && (
         <div>
           <strong>New Address:</strong> {address}
+        </div>
+      )}
+      {wif && (
+        <div>
+          <strong>Private Key (WIF):</strong> {wif}
         </div>
       )}
     </div>
